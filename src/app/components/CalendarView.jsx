@@ -1,17 +1,23 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import {
   getMonthDays,
   getWeekDays,
   getHoursForDay,
 } from '../utils/calendarUtils';
 
-export default function CalendarView({ viewType, selectedDate, sessions, onSlotClick }) {
+export default function CalendarView({
+  viewType,
+  selectedDate,
+  sessions,
+  onSlotClick,
+  onEdit,
+}) {
   const today = selectedDate || new Date();
 
   const isSlotBooked = (datetime) => {
-    return sessions.some((s) =>
-      new Date(s.datetime).getTime() === new Date(datetime).getTime()
+    return sessions.some(
+      (s) => new Date(s.datetime).getTime() === new Date(datetime).getTime()
     );
   };
 
@@ -25,11 +31,16 @@ export default function CalendarView({ viewType, selectedDate, sessions, onSlotC
             <div key={date} className="p-2 border h-24">
               <div className="text-sm font-bold">{date.getDate()}</div>
               {sessions
-                .filter((s) =>
-                  new Date(s.datetime).toDateString() === date.toDateString()
+                .filter(
+                  (s) =>
+                    new Date(s.datetime).toDateString() === date.toDateString()
                 )
                 .map((s, i) => (
-                  <div key={i} className="text-xs text-red-600 truncate">
+                  <div
+                    key={i}
+                    className="text-xs text-red-600 truncate cursor-pointer"
+                    onClick={() => onEdit(s.id)}
+                  >
                     {new Date(s.datetime).toLocaleTimeString()}
                   </div>
                 ))}
@@ -53,20 +64,23 @@ export default function CalendarView({ viewType, selectedDate, sessions, onSlotC
                 {day.toDateString()}
               </div>
               {hours.map((hour) => {
-                const slot = new Date(
-                  `${day.toDateString()} ${hour}`
+                const slot = new Date(`${day.toDateString()} ${hour}`);
+                const session = sessions.find(
+                  (s) => new Date(s.datetime).getTime() === slot.getTime()
                 );
                 return (
                   <div
                     key={hour}
                     className={`p-2 text-sm border-t cursor-pointer ${
-                      isSlotBooked(slot)
+                      session
                         ? 'bg-red-100 text-red-700'
                         : 'hover:bg-green-100'
                     }`}
-                    onClick={() => !isSlotBooked(slot) && onSlotClick(slot)}
+                    onClick={() =>
+                      session ? onEdit(session.id) : onSlotClick(slot)
+                    }
                   >
-                    {hour}
+                    {session ? session.caseNumber : hour}
                   </div>
                 );
               })}
@@ -84,17 +98,22 @@ export default function CalendarView({ viewType, selectedDate, sessions, onSlotC
         <h2 className="text-xl mb-2">Day View - {today.toDateString()}</h2>
         {hours.map((hour) => {
           const slot = new Date(`${today.toDateString()} ${hour}`);
+          const session = sessions.find(
+            (s) => new Date(s.datetime).getTime() === slot.getTime()
+          );
           return (
             <div
               key={hour}
               className={`p-2 border-b text-sm cursor-pointer ${
-                isSlotBooked(slot)
+                session
                   ? 'bg-red-100 text-red-700'
                   : 'hover:bg-green-100'
               }`}
-              onClick={() => !isSlotBooked(slot) && onSlotClick(slot)}
+              onClick={() =>
+                session ? onEdit(session.id) : onSlotClick(slot)
+              }
             >
-              {hour}
+              {session ? session.caseNumber : hour}
             </div>
           );
         })}

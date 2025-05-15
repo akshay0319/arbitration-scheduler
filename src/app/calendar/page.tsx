@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import CalendarView from '@/app/components/CalendarView';
 import SessionModal from '@/app/components/SessionModal';
+import DeleteConfirmModal from '@/app/components/DeleteConfirmModal';
 
 export default function CalendarPage() {
   const router = useRouter();
@@ -10,10 +11,12 @@ export default function CalendarPage() {
   const [selectedDate] = useState(new Date());
   const [sessions, setSessions] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
   const [modalOpen, setModalOpen] = useState(false);
   const [editingSession, setEditingSession] = useState(null);
 
-  // Get current user from localStorage (fake auth)
+  const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
+
   const currentUserEmail = typeof window !== 'undefined'
     ? localStorage.getItem('currentUser') || 'admin@demo.com'
     : 'admin@demo.com';
@@ -40,10 +43,16 @@ export default function CalendarPage() {
   };
 
   const handleDeleteSession = (sessionId: number) => {
-    if (window.confirm('Are you sure you want to cancel this session?')) {
-      setSessions(sessions.filter((s) => s.id !== sessionId));
-    }
+    setDeleteConfirmId(sessionId);
   };
+
+  const confirmDelete = () => {
+  setSessions((prev) => prev.filter((s) => s.id !== deleteConfirmId));
+  setDeleteConfirmId(null);         // ✅ Close confirmation popup
+  setEditingSession(null);          // ✅ Clear form data
+  setModalOpen(false);              // ✅ Close form modal
+};
+
 
   const handleSaveSession = (session) => {
     setSessions((prev) => {
@@ -102,17 +111,16 @@ export default function CalendarPage() {
           ☰
         </button>
 
-        {/* Calendar */}
+        {/* Calendar View */}
         <CalendarView
           viewType={viewType}
           selectedDate={selectedDate}
           sessions={sessions}
           onSlotClick={handleSlotClick}
           onEdit={handleEditSession}
-          onDelete={handleDeleteSession}
         />
 
-        {/* Session Modal */}
+        {/* Create/Update Modal */}
         <SessionModal
           isOpen={modalOpen}
           onClose={() => {
@@ -120,8 +128,16 @@ export default function CalendarPage() {
             setEditingSession(null);
           }}
           onSave={handleSaveSession}
+          onDelete={handleDeleteSession}
           sessionData={editingSession}
           currentUser={currentUserEmail}
+        />
+
+        {/* Delete Confirmation Modal */}
+        <DeleteConfirmModal
+        isOpen={!!deleteConfirmId}
+        onClose={() => setDeleteConfirmId(null)}
+        onConfirm={confirmDelete}
         />
       </div>
     </main>
