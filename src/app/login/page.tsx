@@ -1,6 +1,7 @@
 'use client';
+
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -8,68 +9,84 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const isLoggedIn = localStorage.getItem('isLoggedIn');
-    if (isLoggedIn) router.push('/calendar');
-  }, [router]);
+  const users = [
+    {
+      email: 'admin@demo.com',
+      password: 'admin123',
+      role: 'admin',
+    },
+    {
+      email: 'claimant@demo.com',
+      password: 'password123',
+      role: 'claimant',
+    },
+    {
+      email: 'respondent@demo.com',
+      password: 'password123',
+      role: 'respondent',
+    },
+  ];
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    if (email === 'admin@demo.com' && password === 'admin123') {
+    const foundUser = users.find((u) => u.email === email && u.password === password);
+
+    if (foundUser) {
       localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('currentUser', foundUser.email);
+      localStorage.setItem('userRole', foundUser.role);
       router.push('/calendar');
     } else {
       setError('Invalid credentials');
+      setTimeout(() => setError(''), 3000);
     }
   };
 
   return (
-    <div className="h-screen flex items-center justify-center bg-gray-100">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white shadow-md rounded-lg p-8 w-full max-w-sm"
-      >
-        <h2 className="text-2xl font-semibold mb-6 text-center" style={{ color: '#005186' }}>
-          Login
-        </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center text-[#005186]">Login</h2>
 
         {error && (
-          <div className="mb-4 text-red-500 text-sm text-center">{error}</div>
+          <div className="mb-4 text-sm text-red-600 bg-red-100 px-3 py-2 rounded border border-red-300">
+            {error}
+          </div>
         )}
 
-        <div className="mb-4">
-          <label className="block text-sm mb-1 text-black">Email</label>
-          <input
-            type="email"
-            className="w-full px-3 py-2 border rounded text-black placeholder-gray-500"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="admin@demo.com"
-          />
-        </div>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div className="mb-4">
+            <label className="block text-sm mb-1 text-black">Email</label>
+            <input
+              type="email"
+              className="w-full px-3 py-2 border rounded text-black placeholder-gray-400"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="admin@demo.com"
+              required
+            />
+          </div>
 
-        <div className="mb-6">
-          <label className="block text-sm mb-1 text-black">Password</label>
-          <input
-            type="password"
-            className="w-full px-3 py-2 border rounded text-black placeholder-gray-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="admin123"
-          />
-        </div>
+          <div className="mb-6">
+            <label className="block text-sm mb-1 text-black">Password</label>
+            <input
+              type="password"
+              className="w-full px-3 py-2 border rounded text-black placeholder-gray-400"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="admin123"
+              required
+            />
+          </div>
 
-        <button
+          <button
             type="submit"
-            className="w-full text-white py-2 rounded transition"
-            style={{ backgroundColor: '#fbb04c' }}
-            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = '#dd8611')}
-            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = '#fbb04c')}
-            >
+            className="w-full py-2 rounded text-white"
+            style={{ backgroundColor: '#fbb04c', color: '#005186' }}
+          >
             Login
-        </button>
-
-      </form>
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
