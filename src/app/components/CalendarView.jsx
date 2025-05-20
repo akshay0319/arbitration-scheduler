@@ -90,27 +90,31 @@ export default function CalendarView({
     return (
       <div>
         {renderHeader(`Month View - ${formattedMonthYear}`)}
-        <div className="grid grid-cols-7 text-center font-medium border-b pb-2" style={{ borderColor: '#dddddd' }}>
+        <div className="grid grid-cols-7 text-center font-medium pb-2" >
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
             <div key={day} className="text-sm" style={{ color: '#005186' }}>{day}</div>
           ))}
         </div>
         {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="grid grid-cols-7 gap-2 border" style={{ borderColor: '#dddddd' }}>
+          <div key={weekIndex} className="grid grid-cols-7 gap-1 mb-1" >
             {week.map((date, i) => (
-              <div key={i} className="p-2 border h-24 text-center" style={{ borderColor: '#dddddd' }}>
+              <div key={i} className="pt-2 pb-2 border border-[#ced4da] h-24 text-center overflow-hidden">
                 <div className="text-sm font-bold">{date ? date.getDate() : ''}</div>
-                {date && sessions
-                  .filter((s) => new Date(s.datetime).toDateString() === date.toDateString())
-                  .map((s, i) => (
-                    <div
-                      key={i}
-                      className="text-xs text-red-600 truncate cursor-pointer"
-                      onClick={() => onEdit(s.id)}
-                    >
-                      {s.startTime} - {s.endTime}
+                  {date && (
+                    <div className="mt-1 h-[60px] overflow-y-auto space-y-1">
+                      {sessions
+                        .filter((s) => new Date(s.datetime).toDateString() === date.toDateString())
+                        .map((s, i) => (
+                          <div
+                            key={i}
+                            className="text-xs text-red-600 truncate cursor-pointer"
+                            onClick={() => onEdit(s.id)}
+                          >
+                            {s.startTime} - {s.endTime}
+                          </div>
+                        ))}
                     </div>
-                  ))}
+                  )}
               </div>
             ))}
           </div>
