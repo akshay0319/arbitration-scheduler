@@ -128,7 +128,7 @@ export default function CalendarView({
         {renderHeader(`Week View - ${formattedMonthYear}`)}
         <div className="grid grid-cols-7 gap-1">
           {days.map((day) => (
-            <div key={day} className="border">
+            <div key={day} className="border border-[#ced4da]">
               <div className="bg-gray-100 text-center font-medium" style={{ color: '#005186' }}>
                 {day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
               </div>
