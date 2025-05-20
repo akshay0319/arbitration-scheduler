@@ -66,7 +66,7 @@ export default function CalendarView({
         <select
   value={viewType}
   onChange={(e) => onChangeView(e.target.value)}
-  className="px-2 py-1 border rounded text-sm"
+  className="h-[34px] px-2 py-1 border rounded text-sm" 
 >
   <option value="day">Day View</option>
   <option value="week">Week View</option>
