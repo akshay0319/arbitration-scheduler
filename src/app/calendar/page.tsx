@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import CalendarView from "@/app/components/CalendarView";
 import SessionModal from "@/app/components/SessionModal";
 import DeleteConfirmModal from "@/app/components/DeleteConfirmModal";
-import { Power } from 'lucide-react';
+import { Power } from "lucide-react";
 
 type SessionData = {
   id?: number;
@@ -126,8 +126,12 @@ export default function CalendarPage() {
             <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold">
               👤
             </div>
-            {currentUserRole.charAt(0).toUpperCase() + currentUserRole.slice(1)}
+            {currentUserRole === "admin"
+              ? "Arbitrator"
+              : currentUserRole.charAt(0).toUpperCase() +
+                currentUserRole.slice(1)}
           </div>
+
           <button
             onClick={() => {
               localStorage.removeItem("isLoggedIn");
@@ -138,7 +142,7 @@ export default function CalendarPage() {
             className="text-red-600 hover:text-red-800 text-xl"
             title="Logout"
           >
-              <Power className="w-5 h-5" />
+            <Power className="w-5 h-5" />
           </button>
         </div>
       </header>
