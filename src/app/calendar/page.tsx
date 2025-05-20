@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from "next/navigation";
 import CalendarView from "@/app/components/CalendarView";
 import SessionModal from "@/app/components/SessionModal";
 import DeleteConfirmModal from "@/app/components/DeleteConfirmModal";
+
 import { Power } from "lucide-react";
 
 type SessionData = {
@@ -31,6 +32,8 @@ export default function CalendarPage() {
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     setMounted(true);
@@ -59,6 +62,16 @@ export default function CalendarPage() {
       setViewType("month");
     }
   }, [currentUserRole]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !(dropdownRef.current as any).contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   if (!mounted || !selectedDate) return null;
 
@@ -121,29 +134,36 @@ export default function CalendarPage() {
           alt="Presolv360 Logo"
           className="h-8 object-contain"
         />
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2 text-sm text-[#005186] font-medium">
+
+        <div className="relative" ref={dropdownRef}>
+          <div
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="flex items-center gap-2 text-sm text-[#005186] font-medium cursor-pointer"
+          >
             <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-white font-bold">
               👤
             </div>
-            {currentUserRole === "admin"
-              ? "Arbitrator"
-              : currentUserRole.charAt(0).toUpperCase() +
-                currentUserRole.slice(1)}
+            {currentUserRole === 'admin'
+              ? 'Arbitrator'
+              : currentUserRole.charAt(0).toUpperCase() + currentUserRole.slice(1)}
           </div>
 
-          <button
-            onClick={() => {
-              localStorage.removeItem("isLoggedIn");
-              localStorage.removeItem("currentUser");
-              localStorage.removeItem("userRole");
-              window.location.href = "/login";
-            }}
-            className="text-red-600 hover:text-red-800 text-xl"
-            title="Logout"
-          >
-            <Power className="w-5 h-5" />
-          </button>
+          {dropdownOpen && (
+            <div className="absolute right-0 mt-2 w-25 bg-white border border-gray-300 rounded shadow z-50">
+              <button
+                onClick={() => {
+                  localStorage.removeItem('isLoggedIn');
+                  localStorage.removeItem('currentUser');
+                  localStorage.removeItem('userRole');
+                  window.location.href = '/login';
+                }}
+                className="w-[97px] py-2 text-sm text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
+              >
+                <Power className="w-4 h-4" />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </header>
 

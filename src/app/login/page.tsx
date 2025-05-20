@@ -13,7 +13,7 @@ export default function LoginPage() {
     {
       email: "arbitrator@demo.com",
       password: "password123",
-      role: "admin",
+      role: "arbitrator",
     },
     {
       email: "claimant@demo.com",
