@@ -1,59 +1,69 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import CalendarView from '@/app/components/CalendarView';
-import SessionModal from '@/app/components/SessionModal';
-import DeleteConfirmModal from '@/app/components/DeleteConfirmModal';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import CalendarView from "@/app/components/CalendarView";
+import SessionModal from "@/app/components/SessionModal";
+import DeleteConfirmModal from "@/app/components/DeleteConfirmModal";
+
+type SessionData = {
+  id?: number;
+  datetime: string;
+  arbitrator: string;
+  claimantEmail?: string;
+  respondentEmail?: string;
+  [key: string]: unknown; // replaces `any` to satisfy ESLint
+};
 
 export default function CalendarPage() {
   const router = useRouter();
 
   const [mounted, setMounted] = useState(false);
-  const [viewType, setViewType] = useState<'day' | 'week' | 'month'>('week');
+  const [viewType, setViewType] = useState<"day" | "week" | "month">("week");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState<SessionData[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingSession, setEditingSession] = useState(null);
+  const [editingSession, setEditingSession] = useState<SessionData | null>(
+    null
+  );
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
-  const [currentUserEmail, setCurrentUserEmail] = useState('');
-  const [currentUserRole, setCurrentUserRole] = useState('');
-
-useEffect(() => {
-  setMounted(true);
-  setSelectedDate(new Date());
-
-  const isLoggedIn = localStorage.getItem('isLoggedIn');
-  if (!isLoggedIn) router.push('/login');
-
-  const storedEmail = localStorage.getItem('currentUser');
-  const storedRole = localStorage.getItem('userRole');
-  const storedSessions = localStorage.getItem('sessions');
-
-  if (storedEmail) setCurrentUserEmail(storedEmail);
-  if (storedRole) setCurrentUserRole(storedRole);
-  if (storedSessions) setSessions(JSON.parse(storedSessions));
-}, [router]);
-
-
-useEffect(() => {
-  if (mounted) {
-    localStorage.setItem('sessions', JSON.stringify(sessions));
-  }
-}, [sessions, mounted]);
-
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
+  const [currentUserRole, setCurrentUserRole] = useState("");
 
   useEffect(() => {
-    if (currentUserRole === 'claimant' || currentUserRole === 'respondent') {
-      setViewType('month');
+    setMounted(true);
+    setSelectedDate(new Date());
+
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
+    if (!isLoggedIn) router.push("/login");
+
+    const storedEmail = localStorage.getItem("currentUser");
+    const storedRole = localStorage.getItem("userRole");
+    const storedSessions = localStorage.getItem("sessions");
+
+    if (storedEmail) setCurrentUserEmail(storedEmail);
+    if (storedRole) setCurrentUserRole(storedRole);
+    if (storedSessions) setSessions(JSON.parse(storedSessions));
+  }, [router]);
+
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("sessions", JSON.stringify(sessions));
+    }
+  }, [sessions, mounted]);
+
+  useEffect(() => {
+    if (currentUserRole === "claimant" || currentUserRole === "respondent") {
+      setViewType("month");
     }
   }, [currentUserRole]);
 
   if (!mounted || !selectedDate) return null;
 
   const handleSlotClick = (datetime: Date) => {
-    if (currentUserRole === 'claimant' || currentUserRole === 'respondent') return;
+    if (currentUserRole === "claimant" || currentUserRole === "respondent")
+      return;
 
     setEditingSession({
       datetime: datetime.toString(),
@@ -81,7 +91,7 @@ useEffect(() => {
     setModalOpen(false);
   };
 
-  const handleSaveSession = (session) => {
+  const handleSaveSession = (session: SessionData) => {
     setSessions((prev) => {
       const exists = prev.find((s) => s.id === session.id);
       if (exists) {
@@ -94,14 +104,17 @@ useEffect(() => {
   };
 
   const visibleSessions = sessions.filter((s) => {
-    if (currentUserRole === 'claimant') return s.claimantEmail === currentUserEmail;
-    if (currentUserRole === 'respondent') return s.respondentEmail === currentUserEmail;
+    if (currentUserRole === "claimant")
+      return s.claimantEmail === currentUserEmail;
+    if (currentUserRole === "respondent")
+      return s.respondentEmail === currentUserEmail;
     return true;
   });
 
   return (
     <>
       <header className="w-full bg-white px-4 py-6 border-b flex items-center justify-between">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://presolv360.com/build/static/media/logo.1326f5cba41d9c4e5917.png"
           alt="Presolv360 Logo"
@@ -116,10 +129,10 @@ useEffect(() => {
           </div>
           <button
             onClick={() => {
-              localStorage.removeItem('isLoggedIn');
-              localStorage.removeItem('currentUser');
-              localStorage.removeItem('userRole');
-              window.location.href = '/login';
+              localStorage.removeItem("isLoggedIn");
+              localStorage.removeItem("currentUser");
+              localStorage.removeItem("userRole");
+              window.location.href = "/login";
             }}
             className="text-red-600 hover:text-red-800 text-xl"
             title="Logout"
@@ -164,7 +177,9 @@ useEffect(() => {
             sessionData={editingSession}
             currentUser={currentUserEmail}
             sessions={sessions}
-            readOnly={currentUserRole === 'claimant' || currentUserRole === 'respondent'}
+            readOnly={
+              currentUserRole === "claimant" || currentUserRole === "respondent"
+            }
           />
 
           <DeleteConfirmModal
