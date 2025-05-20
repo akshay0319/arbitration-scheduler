@@ -122,10 +122,10 @@ export default function SessionModal({
 
         <form onSubmit={handleSubmit} className="space-y-4 text-black">
           <div>
-            <label className="block mb-1 text-sm font-medium">Case Number</label>
+            <label className="block mb-1 text-sm font-medium">Case Id</label>
             <input
-              className="w-full border p-2 rounded"
-              placeholder="Case Number"
+              className="w-full border border-[#ced4da] p-2 rounded text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
+              placeholder="Case Id"
               value={formData.caseNumber}
               onChange={(e) => setFormData({ ...formData, caseNumber: e.target.value })}
               readOnly={readOnly}
@@ -137,7 +137,7 @@ export default function SessionModal({
             <label className="block mb-1 text-sm font-medium">Date</label>
             <input
               type="date"
-              className="w-full border p-2 rounded"
+              className="w-full border border-[#ced4da] p-2 rounded text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
               value={formData.date}
               onChange={(e) => setFormData({ ...formData, date: e.target.value })}
               readOnly={readOnly}
@@ -149,7 +149,7 @@ export default function SessionModal({
             <div className="w-1/2">
               <label className="block mb-1 text-sm font-medium">Start Time</label>
               <select
-                className="w-full border p-2 rounded"
+                className="w-full border border-[#ced4da] p-2 rounded text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
                 value={formData.startTime}
                 onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
                 disabled={readOnly}
@@ -163,7 +163,7 @@ export default function SessionModal({
             <div className="w-1/2">
               <label className="block mb-1 text-sm font-medium">End Time</label>
               <select
-                className="w-full border p-2 rounded"
+                className="w-full border border-[#ced4da] p-2 rounded text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
                 value={formData.endTime}
                 onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
                 disabled={readOnly}
@@ -179,7 +179,7 @@ export default function SessionModal({
           <div>
             <label className="block mb-1 text-sm font-medium">Arbitrator Email</label>
             <input
-              className="w-full border p-2 rounded bg-gray-100 text-gray-600"
+              className="w-full border border-[#ced4da] p-2 rounded bg-gray-100 text-gray-600 text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
               value={formData.arbitrator}
               readOnly
             />
@@ -188,7 +188,7 @@ export default function SessionModal({
           <div>
             <label className="block mb-1 text-sm font-medium">Claimant Email</label>
             <input
-              className="w-full border p-2 rounded"
+              className="w-full border border-[#ced4da] p-2 rounded text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
               placeholder="Claimant Email"
               value={formData.claimantEmail}
               onChange={(e) => setFormData({ ...formData, claimantEmail: e.target.value })}
@@ -199,7 +199,7 @@ export default function SessionModal({
           <div>
             <label className="block mb-1 text-sm font-medium">Respondent Email</label>
             <input
-              className="w-full border p-2 rounded"
+              className="w-full border border-[#ced4da] p-2 rounded text-[#495057] placeholder-[#495057] focus:outline-none focus:border-[#ced4da]"
               placeholder="Respondent Email"
               value={formData.respondentEmail}
               onChange={(e) => setFormData({ ...formData, respondentEmail: e.target.value })}

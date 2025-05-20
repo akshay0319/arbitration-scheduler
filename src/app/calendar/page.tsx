@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import CalendarView from "@/app/components/CalendarView";
 import SessionModal from "@/app/components/SessionModal";
 import DeleteConfirmModal from "@/app/components/DeleteConfirmModal";
+import { Power } from 'lucide-react';
 
 type SessionData = {
   id?: number;
@@ -137,7 +138,7 @@ export default function CalendarPage() {
             className="text-red-600 hover:text-red-800 text-xl"
             title="Logout"
           >
-            ⏻
+              <Power className="w-5 h-5" />
           </button>
         </div>
       </header>
