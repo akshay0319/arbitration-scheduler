@@ -138,7 +138,7 @@ export default function CalendarView({
                 return (
                   <div
                     key={hour}
-                    className={`p-2 text-sm border-t cursor-pointer ${
+                    className={`p-2 text-sm border-t border-[#ced4da] cursor-pointer ${
                       occupied ? 'bg-red-100 text-red-700' : 'hover:bg-green-100'
                     }`}
                     onClick={() =>
