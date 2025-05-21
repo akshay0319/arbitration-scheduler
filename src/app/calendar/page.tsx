@@ -65,7 +65,8 @@ export default function CalendarPage() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !(dropdownRef.current as any).contains(event.target)) {
+      if (dropdownRef.current && !(dropdownRef.current as Node).contains(event.target as Node)) {
+
         setDropdownOpen(false);
       }
     };
