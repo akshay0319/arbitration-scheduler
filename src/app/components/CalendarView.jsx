@@ -253,7 +253,7 @@ export default function CalendarView({
             return (
               <div
                 key={hour}
-                className={`w-full flex justify-start items-center gap-2 border-b text-sm cursor-pointer ${
+                className={`w-full flex justify-start items-center gap-2 border-b border-[#ced4da] text-sm cursor-pointer ${
                   occupied ? "bg-red-100 text-red-700" : "hover:bg-green-100"
                 }`}
                 onClick={() =>
@@ -264,7 +264,7 @@ export default function CalendarView({
                       )
                 }
               >
-                <div className="w-20 py-2 text-right">
+                <div className="w-20 py-2 text-right" style={{ color: "#495057" }}>
                   {new Date(`1970-01-01T${hour}`).toLocaleTimeString("en-US", {
                     hour: "numeric",
                     minute: "2-digit",
