@@ -245,6 +245,7 @@ export default function CalendarPage() {
             isOpen={!!deleteConfirmId}
             onClose={() => setDeleteConfirmId(null)}
             onConfirm={confirmDelete}
+              message="Are you sure you want to cancel this session?"
           />
           <DeleteConfirmModal
             isOpen={logoutConfirmOpen}

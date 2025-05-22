@@ -6,7 +6,7 @@ export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, message
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-lg w-full max-w-xs text-center border">
         <p className="mb-4 text-black text-sm">
-          {message || "Are you sure you want to cancel this session?"}
+          {message}
         </p>
         <div className="flex justify-center gap-4">
           <button
