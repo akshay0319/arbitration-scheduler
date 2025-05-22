@@ -36,7 +36,7 @@ export default function SessionModal({
     const dateObj = new Date(sessionData.datetime);
     setFormData({
       caseNumber: sessionData.caseNumber || "",
-      date: dateObj.toISOString().split("T")[0],
+      date: dateObj.toISOString().split('T')[0],
       startTime: sessionData.startTime || "09:00",
       endTime: sessionData.endTime || "10:00",
       arbitrator: sessionData.arbitrator || currentUser,

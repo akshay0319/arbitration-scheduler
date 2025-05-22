@@ -66,7 +66,7 @@ export default function CalendarView({
         <select
   value={viewType}
   onChange={(e) => onChangeView(e.target.value)}
-  className="h-[34px] px-2 py-1 border rounded text-sm" 
+  className="h-[34px] px-2 py-2 border rounded text-sm" 
 >
   <option value="day">Day View</option>
   <option value="week">Week View</option>
@@ -98,24 +98,33 @@ export default function CalendarView({
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="grid grid-cols-7 gap-1 mb-1" >
             {week.map((date, i) => (
-              <div key={i} className="pt-2 pb-2 border border-[#ced4da] h-24 text-center overflow-hidden">
-                <div className="text-sm font-bold">{date ? date.getDate() : ''}</div>
-                  {date && (
-                    <div className="mt-1 h-[60px] overflow-y-auto space-y-1">
-                      {sessions
-                        .filter((s) => new Date(s.datetime).toDateString() === date.toDateString())
-                        .map((s, i) => (
-                          <div
-                            key={i}
-                            className="text-xs text-red-600 truncate cursor-pointer"
-                            onClick={() => onEdit(s.id)}
-                          >
-                            {s.startTime} - {s.endTime}
-                          </div>
-                        ))}
-                    </div>
-                  )}
-              </div>
+             <div
+  key={i}
+  className="pt-2 pb-2 border border-[#ced4da] h-24 text-center overflow-hidden cursor-pointer hover:bg-green-50"
+  onClick={() => date && onSlotClick(new Date(`${date.toDateString()} 09:00`))} // ✅ Ensures full datetime for modal
+>
+  <div className="text-sm font-bold">{date ? date.getDate() : ''}</div>
+
+  {date && (
+    <div className="mt-1 h-[60px] overflow-y-auto space-y-1">
+      {sessions
+        .filter((s) => new Date(s.datetime).toDateString() === date.toDateString())
+        .map((s, i) => (
+          <div
+            key={i}
+            className="text-xs text-red-600 truncate cursor-pointer hover:underline"
+            onClick={(e) => {
+              e.stopPropagation();     // ✅ Prevents parent click
+              onEdit(s.id);            // ✅ Open session in edit mode
+            }}
+          >
+            {s.startTime} - {s.endTime}
+          </div>
+        ))}
+    </div>
+  )}
+</div>
+
             ))}
           </div>
         ))}
@@ -171,27 +180,42 @@ export default function CalendarView({
     return (
       <div>
         {renderHeader(dayTitle)}
-        {hours.map((hour) => {
-          const occupied = isSlotOccupied(currentDate, hour);
-          const session = getSessionForSlot(currentDate, hour);
-          return (
-            <div
-              key={hour}
-              className={`p-2 border-b text-sm cursor-pointer ${
-                occupied ? 'bg-red-100 text-red-700' : 'hover:bg-green-100'
-              }`}
-              onClick={() =>
-                occupied
-                  ? onEdit(session.id)
-                  : onSlotClick(new Date(`${currentDate.toDateString()} ${hour}`))
-              }
-            >
-              {occupied
-                ? `${session.startTime} - ${session.endTime} | ${session.caseNumber}`
-                : hour}
-            </div>
-          );
-        })}
+
+        <div className="flex flex-col justify-start items-end w-full pr-4">
+  {hours.map((hour) => {
+    const occupied = isSlotOccupied(currentDate, hour);
+    const session = getSessionForSlot(currentDate, hour);
+    return (
+      <div
+        key={hour}
+        className={`w-full flex justify-start items-center gap-2 border-b text-sm cursor-pointer ${
+          occupied ? 'bg-red-100 text-red-700' : 'hover:bg-green-100'
+        }`}
+        onClick={() =>
+          occupied
+            ? onEdit(session.id)
+            : onSlotClick(new Date(`${currentDate.toDateString()} ${hour}`))
+        }
+      >
+        <div className="w-20 py-2 text-right">
+          {new Date(`1970-01-01T${hour}`).toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true,
+          })}
+        </div>
+
+        {occupied && (
+          <div className="text-sm font-medium text-right text-[#005186] truncate">
+            {session.caseNumber}
+          </div>
+        )}
+      </div>
+    );
+  })}
+</div>
+
+
       </div>
     );
   }

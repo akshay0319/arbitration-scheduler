@@ -22,7 +22,9 @@ export function getWeekDays(startDate: Date) {
 export function getHoursForDay() {
   const hours = [];
   for (let h = 9; h <= 18; h++) {
-    hours.push(`${h}:00`);
+    const padded = h.toString().padStart(2, '0');  // 👈 pad hour
+    hours.push(`${padded}:00`);
   }
   return hours;
 }
+

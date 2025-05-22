@@ -1,32 +1,29 @@
 'use client';
-export default function DeleteConfirmModal({ isOpen, onClose, onConfirm }) {
+export default function DeleteConfirmModal({ isOpen, onClose, onConfirm, message }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center z-50">
-      <div className="bg-white border border-gray-300 p-6 rounded-md shadow-md w-full max-w-xs text-center">
-        <h2 className="text-lg font-semibold mb-4">Cancel Session?</h2>
-        <p className="text-sm mb-6 text-gray-600">
-          Are you sure you want to cancel this arbitration session?
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
+      <div className="bg-white p-6 rounded shadow-lg w-full max-w-xs text-center border">
+        <p className="mb-4 text-black text-sm">
+          {message || "Are you sure you want to cancel this session?"}
         </p>
-        <div className="flex justify-between">
+        <div className="flex justify-center gap-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded bg-gray-300"
+            className="px-4 py-2 rounded bg-gray-200 text-black hover:bg-gray-300"
           >
-            No
+            Close
           </button>
           <button
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-            className="px-4 py-2 rounded bg-red-600 text-white"
+            onClick={onConfirm}
+            className="px-4 py-2 rounded bg-red-500 text-white hover:bg-red-600"
           >
-            Yes, Cancel
+            Yes
           </button>
         </div>
       </div>
     </div>
   );
 }
+

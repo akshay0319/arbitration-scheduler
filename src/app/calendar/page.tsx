@@ -33,6 +33,8 @@ export default function CalendarPage() {
   const [currentUserEmail, setCurrentUserEmail] = useState("");
   const [currentUserRole, setCurrentUserRole] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
+
   const dropdownRef = useRef(null);
 
   useEffect(() => {
@@ -76,15 +78,32 @@ export default function CalendarPage() {
 
   if (!mounted || !selectedDate) return null;
 
-  const handleSlotClick = (datetime: Date) => {
-    if (currentUserRole === "claimant" || currentUserRole === "respondent")
-      return;
+  // const handleSlotClick = (datetime: Date) => {
+  //   if (currentUserRole === "claimant" || currentUserRole === "respondent")
+  //     return;
 
-    setEditingSession({
-      datetime: datetime.toString(),
-      arbitrator: currentUserEmail,
-    });
-    setModalOpen(true);
+  //   setEditingSession({
+  //     datetime: datetime.toISOString(), 
+  //     arbitrator: currentUserEmail,
+  //   });
+  //   setModalOpen(true);
+  // };
+
+
+  const handleSlotClick = (datetime: Date) => {
+  if (currentUserRole === "claimant" || currentUserRole === "respondent") return;
+
+  const hour = datetime.getHours();
+  const startTime = `${hour.toString().padStart(2, '0')}:00`;
+  const endTime = `${(hour + 1).toString().padStart(2, '0')}:00`;
+
+  setEditingSession({
+    datetime: datetime.toString(),
+    arbitrator: currentUserEmail,
+    startTime,
+    endTime,
+  });
+  setModalOpen(true);
   };
 
   const handleEditSession = (sessionId: number) => {
@@ -105,6 +124,14 @@ export default function CalendarPage() {
     setEditingSession(null);
     setModalOpen(false);
   };
+
+  const confirmLogout = () => {
+  localStorage.removeItem("isLoggedIn");
+  localStorage.removeItem("currentUser");
+  localStorage.removeItem("userRole");
+  window.location.href = "/login";
+};
+
 
   const handleSaveSession = (session: SessionData) => {
     setSessions((prev) => {
@@ -128,7 +155,9 @@ export default function CalendarPage() {
 
   return (
     <>
-      <header className="w-full bg-white px-4 py-6 border-b flex items-center justify-between">
+      <header className="w-full bg-white px-4 py-6 flex items-center justify-between" style={{
+    background: 'linear-gradient(to right, #d5e2eb, #ffffff)',
+  }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="https://presolv360.com/build/static/media/logo.1326f5cba41d9c4e5917.png"
@@ -153,11 +182,15 @@ export default function CalendarPage() {
             <div className="absolute right-0 mt-2 w-25 bg-white border border-gray-300 rounded shadow z-50">
               <button
                 onClick={() => {
-                  localStorage.removeItem('isLoggedIn');
-                  localStorage.removeItem('currentUser');
-                  localStorage.removeItem('userRole');
-                  window.location.href = '/login';
+                  // localStorage.removeItem('isLoggedIn');
+                  // localStorage.removeItem('currentUser');
+                  // localStorage.removeItem('userRole');
+                  // setLogoutConfirmOpen(true);
+                  // window.location.href = '/login';
+                          setLogoutConfirmOpen(true); // ✅ Only open confirmation modal
+
                 }}
+                
                 className="w-[97px] py-2 text-sm text-red-600 hover:bg-red-50 flex items-center justify-center gap-2"
               >
                 <Power className="w-4 h-4" />
@@ -170,7 +203,7 @@ export default function CalendarPage() {
 
       <main className="min-h-screen bg-white text-black flex">
         {sidebarOpen && (
-          <aside className="w-64 bg-gray-100 p-4 shadow-md">
+          <aside className="w-64 p-4 shadow-md" style={{ backgroundColor: '#d5e2eb' }}>
             <h2 className="text-xl font-bold mb-6">📅 Calendar</h2>
           </aside>
         )}
@@ -213,6 +246,20 @@ export default function CalendarPage() {
             onClose={() => setDeleteConfirmId(null)}
             onConfirm={confirmDelete}
           />
+          <DeleteConfirmModal
+            isOpen={logoutConfirmOpen}
+            onClose={() => setLogoutConfirmOpen(false)}
+            onConfirm={() => {
+              localStorage.removeItem("isLoggedIn");
+              localStorage.removeItem("currentUser");
+              localStorage.removeItem("userRole");
+              window.location.href = "/login";
+            }}
+            message="Are you sure you want to logout?"
+          />
+
+
+
         </div>
       </main>
     </>
