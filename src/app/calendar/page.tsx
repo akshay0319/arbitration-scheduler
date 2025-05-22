@@ -204,11 +204,11 @@ export default function CalendarPage() {
       <main className="min-h-screen bg-white text-black flex">
         {sidebarOpen && (
           <aside className="w-64 p-4 shadow-md" style={{ backgroundColor: '#d5e2eb' }}>
-            <h2 className="text-xl font-bold mb-6">📅 Calendar</h2>
+            <h2 className="text-xl font-bold mb-6">Calendar</h2>
           </aside>
         )}
 
-        <div className="flex-1 p-4 relative">
+        <div className="flex-1 p-4 relative ">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
             className="text-2xl absolute top-4 left-4 lg:hidden"
