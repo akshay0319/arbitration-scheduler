@@ -125,12 +125,12 @@ export default function CalendarPage() {
     setModalOpen(false);
   };
 
-  const confirmLogout = () => {
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("currentUser");
-  localStorage.removeItem("userRole");
-  window.location.href = "/login";
-};
+//   const confirmLogout = () => {
+//   localStorage.removeItem("isLoggedIn");
+//   localStorage.removeItem("currentUser");
+//   localStorage.removeItem("userRole");
+//   window.location.href = "/login";
+// };
 
 
   const handleSaveSession = (session: SessionData) => {
